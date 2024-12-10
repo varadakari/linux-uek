@@ -1025,6 +1025,13 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
 	err = nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
 	if (err)
 		return err;
+    /* To enable non splice reads on the file system disabling the RQ_SPLICE_OK bit ,
+    * else nfs is making 64KB requests. This change we will make the complete read
+    * size request in readv chunked by the rsize */
+
+	if (disable_splice_read) {
+		clear_bit(RQ_SPLICE_OK, &rqstp->rq_flags);
+	}
 
 	file = nf->nf_file;
 	if (file->f_op->splice_read && test_bit(RQ_SPLICE_OK, &rqstp->rq_flags))

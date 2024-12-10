@@ -37,6 +37,12 @@ module_param(inter_copy_offload_enable, bool, 0644);
 MODULE_PARM_DESC(inter_copy_offload_enable,
 		 "Enable inter server to server copy offload. Default: false");
 
+bool disable_splice_read = true;
+EXPORT_SYMBOL_GPL(disable_splice_read);
+module_param(disable_splice_read, bool, 0644);
+MODULE_PARM_DESC(disable_splice_read,
+		"Turn off splice reads on server");
+
 extern struct svc_program	nfsd_program;
 static int			nfsd(void *vrqstp);
 #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)

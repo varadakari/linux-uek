@@ -3681,6 +3681,14 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
 			 (xdr->buf->buflen - xdr->buf->len));
 	maxcount = min_t(unsigned long, maxcount, read->rd_length);
 
+    /* To enable non splice reads on the file system disabling the RQ_SPLICE_OK bit ,
+    *  else nfs is making 64KB requests. This change we will make the complete read
+    *  size request in readv chunked by the rsize */
+
+	if (disable_splice_read) {
+		clear_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
+	}
+
 	if (file->f_op->splice_read &&
 	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags))
 		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);

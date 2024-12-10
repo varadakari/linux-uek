@@ -58,6 +58,10 @@
  */
 #define NFSD_BUFSIZE            ((RPC_MAX_HEADER_WITH_AUTH+26)*XDR_UNIT + NFSSVC_MAXBLKSIZE)
 
+/* module param to disable splice read */
+extern bool disable_splice_read;
+
+
 struct readdir_cd {
 	__be32			err;	/* 0, nfserr, or nfserr_eof */
 };
